@@ -1,0 +1,22 @@
+.input {
+  font-family: 'Pretendard';
+  width: 100%;
+  font-size: 1rem;
+  background-color: var(--background-transparent-100);
+  border: none;
+  padding: 16px 20px;
+  transition: background-color 0.2s, box-shadow 0.2s;
+  border-radius: var(--border-radius-large);
+  font-weight: 600;
+  color: white;
+  outline: var(--outline);
+  &:hover {
+    background-color: var(--background-transparent-200);
+  }
+  &:focus {
+    box-shadow: var(--input-inset-shadow);
+  }
+  &::-webkit-resizer {
+    display: none;
+  }
+}
