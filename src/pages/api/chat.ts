@@ -26,6 +26,9 @@ const chatHandler = (req: NextApiRequest, res: NextApiResponseServerIO) => {
       if (err) {
         console.error(err)
       }
+      if (!data) {
+        return res.status(200).json([])
+      }
 
       const messages = data
         .split('\n')
