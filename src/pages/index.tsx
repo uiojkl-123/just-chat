@@ -90,7 +90,7 @@ const Home = () => {
         <div className="h-full overflow-scroll" ref={scrollRef}>
           <div className="h-fit">
             <div className={'flex flex-col gap-1 p-5 '}>
-              {messages.reverse().map((v, index, arr) => {
+              {messages.map((v, index, arr) => {
                 return (
                   <div
                     className={
@@ -100,6 +100,7 @@ const Home = () => {
                         ? ' '
                         : 'mt-2 ')
                     }
+                    key={index}
                   >
                     <div
                       className="flex flex-col gap-1"
