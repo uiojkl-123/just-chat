@@ -31,13 +31,13 @@ const chatHandler = (req: NextApiRequest, res: NextApiResponseServerIO) => {
         .split('\n')
         .slice(0, -1)
         .map((message) => {
-          const [name, date, content] = message.split(' ')
+          const [name, date, ...content] = message.split(' ')
           return {
             user: {
               name,
             },
             date,
-            content,
+            content: content.join(' '),
           }
         })
       res.status(200).json(messages)

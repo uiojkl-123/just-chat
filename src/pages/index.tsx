@@ -7,7 +7,7 @@ import { useSocketStore } from '@/stores/socketStore'
 import { useUserStore } from '@/stores/userStore'
 import { IMessage } from '@/types/chat'
 import { timeToKoreanFormat } from '@/utils/time'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 const Home = () => {
   const { socket, isConnected } = useSocketStore()
@@ -15,6 +15,7 @@ const Home = () => {
 
   const scrollRef = useRef<HTMLDivElement>(null)
 
+  const [isCurrentMessage, setIsCurrentMessage] = useState<boolean>(false)
   const [messages, setMessages] = useState<IMessage[]>([])
   const [currentMessage, setCurrentMessage] = useState<string>('')
 
@@ -41,10 +42,24 @@ const Home = () => {
   }, [socket, scrollRef])
 
   useEffect(() => {
-    if (scrollRef.current?.scrollTop === scrollRef.current?.scrollHeight) {
+    if (scrollRef.current) {
+      scrollRef.current?.addEventListener('scroll', () => {
+        const scroll = scrollRef.current?.scrollTop ?? 0
+        const height = scrollRef.current?.clientHeight ?? 0
+        const scrollHeight = scrollRef.current?.scrollHeight ?? 0
+
+        const isCurrent = scroll + height + 500 >= scrollHeight
+
+        setIsCurrentMessage(isCurrent)
+      })
+    }
+  }, [scrollRef.current])
+
+  useEffect(() => {
+    if (isCurrentMessage) {
       scrollToBottom()
     }
-  }, [scrollRef, messages])
+  }, [messages, isCurrentMessage])
 
   const scrollToBottom = useCallback(() => {
     scrollRef.current?.scrollTo({
@@ -148,7 +163,17 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <div className="p-5 flex flex-col gap-2 text-white w-full bottom-0 h-fit">
+        <div className="p-5 flex flex-col gap-2 text-white w-full bottom-0 h-fit relative">
+          {!isCurrentMessage && (
+            <div
+              className="text-bold absolute top-[-20px] left-[50%] transform translate-x-[-50%] text-center cursor-pointer backdrop-blur-2xl p-2 rounded-lg bg-gray-900"
+              style={{ color: '#d1d1d1' }}
+              onClick={scrollToBottom}
+            >
+              아래로 스크롤
+            </div>
+          )}
+
           <div className="text-bold" style={{ color: '#00ff00' }}>
             {isConnected && '● 연결됨'}
           </div>
